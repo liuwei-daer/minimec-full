@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allyes.minimec.domain.mapper.sys.TipInfoMapper">
+  <resultMap id="BaseResultMap" type="com.allyes.minimec.domain.model.sys.TipInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="tip_code" jdbcType="VARCHAR" property="tipCode" />
+    <result column="tip_msg" jdbcType="VARCHAR" property="tipMsg" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+
+  <select id="selectBySearch" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from tip_info
+    <where>
+      <if test="searchVal != null">
+        tip_code like CONCAT('%',#{searchVal},'%')
+        OR tip_msg like CONCAT('%',#{searchVal},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from tip_info
+    <where>
+      <if test="tipCode != null">
+        tip_code = #{tipCode,jdbcType=VARCHAR},
+      </if>
+    </where>
+    LIMIT 1;
+  </select>
+
+</mapper>

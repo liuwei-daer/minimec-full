@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header_js(~{::title})" >
+    <title>数据字典管理</title>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div th:replace="layout/header :: header" />
+    <div th:replace="layout/sidebar :: sidebar" />
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>数据字典列表查询</h1>
+            <div class="pull-right functionbar">
+                <div class="input-group input-group-inline">
+                    <input class="form-control" type="text" id="searchVal" placeholder="编码，提示内容" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-info" onclick="searchList()" type="button">
+                          &nbsp;<i class="ion-ios-search"></i>&nbsp;
+                      </button>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box-header">
+                        <button type="button" onclick="add()" class="btn btn-primary"><i class="ion-ios-plus-empty"></i>添加</button>
+                    </div>
+                    <div class="box box-round">
+                        <div class="box-body no-padding">
+                            <table class="table  table-striped">
+                                <thead>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>大类名词</th>
+                                    <th>选项编码</th>
+                                    <th>选项名词</th>
+                                    <th>是否启用</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="objInfoList">
+                                <script type="text/html">
+                                    {{each list tab1 index}}
+                                    <tr>
+                                        <td>
+                                            {{pageSize*(page-1) + index + 1}}
+                                        </td>
+                                        <td>{{tab1.dictName}}</td>
+                                        <td> {{tab1.itemCode}}</td>
+                                        <td> {{tab1.itemName}}</td>
+                                        <td>
+                                            {{if tab1.status ==1}}
+                                            启用
+                                            {{else}}
+                                            未启用
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                        <div class='icon-flex'><a href='javascript:void(0);' title='修改' onclick='edit({{tab1.id}})'><i class='oicon oicon-edit'></i></a></div>
+                                    </td>
+                                    </tr>
+                                    {{/each}}
+                                </script>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <p id="infoListPagination"  class="box-footer dataTables_paginate"></p>
+                    <!-- /.box -->
+                </div>
+
+            </div>
+        </section>
+        <!-- /.content -->
+        <div class="modal fade" id="objInfoModal" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">数据字典信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="objInfoForm" class="form-horizontal" role="form" novalidate="novalidate" name="objInfoForm">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">大类名词<i style="color: red">*</i></label>
+                                    <div class="col-sm-9">
+                                        <select id="dictId" style="width: 100%" name="dictId" class="form-control">
+                                            <option value="0">请选择</option>
+                                            <option th:each="dict:${dictTypeList}"
+                                                    th:value="${dict.id}"
+                                                    th:text="${dict.itemName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">编码<i style="color: red">*</i></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="itemCode" id="itemCode" check-type="required" required-message="请填写编码" class="form-control" placeholder="编码"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">选项名词<i style="color: red">*</i></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="itemName" name="itemName" check-type="required" required-message="请填写选项名词" class="form-control" placeholder="选项名词" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">是否启用<i style="color: red">*</i></label>
+                                    <div class="col-sm-9">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="1" id="status" name="status" />
+                                                启用
+                                            </label>
+                                            <label>
+                                                <input type="radio" value="0" id="unstatus" name="status" />
+                                                未启用
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <input type="hidden" id="id" name="id" value=""/>
+                            <input type="hidden" id="itemId" name="itemId" value=""/>
+                            <div class="box-footer text-right">
+                                <button  type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="add" type="button" class="btn btn-info">添加</button>
+                                <button id="update" type="button" class="btn btn-info">修改</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+    <div th:replace="layout/footer :: footer" />
+</div>
+<!-- ./wrapper -->
+<script th:src="@{/js/sys/dict/list.js}" ></script>
+</body>
+</html>
+
+
+

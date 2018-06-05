@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/header :: header_js(~{::title})" >
+    <title>数据字典管理</title>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div th:replace="layout/header :: header" />
+    <div th:replace="layout/sidebar :: sidebar" />
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>系统参数列表</h1>
+            <div class="pull-right functionbar">
+                <div class="input-group input-group-inline">
+                    <input class="form-control" type="text" id="searchVal" placeholder="参数名称，提示内容" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-info" onclick="searchList()" type="button">
+                          &nbsp;<i class="ion-ios-search"></i>&nbsp;
+                      </button>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box-header">
+                        <button type="button" onclick="add()" class="btn btn-primary"><i class="ion-ios-plus-empty"></i>添加</button>
+                        <button type="button" class="btn btn-green offset-left-40" onclick="synCache()">缓存同步</button>
+                    </div>
+                    <div class="box box-round">
+                        <div class="box-body no-padding">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>参数名称</th>
+                                    <th>参数标识</th>
+                                    <th>参数值</th>
+                                    <th>说明</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="objInfoList">
+                                <script id="tpl-list" type="text/html">
+                                    {{each list paramInfo index}}
+                                    <tr>
+                                        <td>{{pageSize*(page-1) + index + 1}}</td>
+                                        <td>{{paramInfo.paramName}}</td>
+                                        <td>{{paramInfo.paramKey}}</td>
+                                        <td>{{paramInfo.paramValue}}</td>
+                                        <td>{{paramInfo.memo}}</td>
+                                        <td>
+                                            <div class='icon-flex'><a href='javascript:void(0);' title='修改' onclick='edit({{paramInfo.id}})'><i class='oicon oicon-edit'></i></a></div>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </script>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <p id="infoListPagination"  class="box-footer dataTables_paginate"></p>
+                    <!-- /.box -->
+                </div>
+
+            </div>
+        </section>
+        <!-- /.content -->
+        <div class="modal fade" id="objInfoModal" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">提示信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="objInfoForm" class="form-horizontal" role="form" novalidate="novalidate" name="objInfoForm">
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">参数名称:<i style="color: red">*</i></label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="paramName" id="paramName" check-type="required" required-message="" class="form-control" placeholder="参数名称"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">参数标识：<i style="color: red">*</i></label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="paramKey" name="paramKey" check-type="required" required-message="" class="form-control" placeholder="参数标识" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">参数值：<i style="color: red">*</i></label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="paramValue" name="paramValue" check-type="required" required-message="" class="form-control" placeholder="参数值" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">说明：</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="memo" name="memo" class="form-control" placeholder="说明" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="id" name="id" value=""/>
+                        </form>
+
+                    </div>
+                    <div class="box-footer text-right">
+                        <button  type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button id="add" type="button" class="btn btn-info">添加</button>
+                        <button id="update" type="button" class="btn btn-info">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+    <div th:replace="layout/footer :: footer" />
+</div>
+<!-- ./wrapper -->
+<script th:src="@{/js/sys/param/list.js}" ></script>
+</body>
+</html>
+
+
+
